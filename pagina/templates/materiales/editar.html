@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block titulo %} Editar Materiales
+{% endblock %}
+
+{% block contenido %} 
+
+<div class="card">
+    <div class="card-header">
+        Editar Material 
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-4">
+                <h4 class="card-title">Datos</h4>
+                {% include 'materiales/form.html'%}
+            </div>
+            <div class="col-md-4">
+                <img src="/img/img/materiales.png" alt="materiales">
+            </div>
+        </div>   
+    </div>
+
+   
+    <div class="card-footer text-muted">
+
+    </div>
+</div>
+
+{% endblock %}

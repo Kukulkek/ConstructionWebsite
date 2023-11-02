@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block titulo %} Lista Materiales {% endblock %}
+
+{% block contenido %} 
+
+<div class="card">
+    <div class="card-header">
+       <a name="" id="" class="btn btn-success" href="{% url 'crear' %}" role="button">Agregar Materiales</a>
+    </div>
+    <div class="card-body">
+        <h4 class="card-title">Materiales</h4>
+        <div class="table-responsive">
+            <table class="table table-secondary">
+                <thead>
+                    <tr>
+                        <th scope="col">Imagen</th>
+                        <th scope="col">ID</th>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Medida</th>
+                        <th scope="col">Precio</th>
+                        <th scope="col">Descripción</th>
+                        <th scope="col">Acciones</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+
+                    {% for material in materiales %}
+                    <tr class="">
+                        <td>
+                            <img src="{{ material.imagen.url }}" height="50">
+                        </td>
+                        <td scope="row">{{ material.id }}</td>
+                        <td>{{ material.nombre }}</td>
+                        <td>{{ material.get_medida_display }}</td>
+                        <td>{{ material.precio }}</td>
+                        <td>{{ material.descripcion }}</td>
+                        
+                        <td>
+                            <a name="" id="" class="btn btn-info" href="{% url 'editar' material.id %}" role="button">Editar</a>
+                            |
+                            <a name="" id="" class="btn btn-danger" href="{% url 'eliminar' material.id %}" role="button">Borrar</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+    </div>
+</div>
+
+{% endblock %}
