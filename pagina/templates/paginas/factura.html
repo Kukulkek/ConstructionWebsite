@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block titulo %} Factura {% endblock %}
+
+{% block contenido %} 
+
+<div class="container mt-5">
+    <ul>
+        {% for cart_material in cart_material %}
+            <li>
+                {{ cart_material.material.nombre }} - ${{ cart_material.material.precio }} - Quantity: {{ cart_material.quantity }}
+                <form method="post" action="{% url 'add_to_budget' cart_material.material.id %}">
+                    {% csrf_token %}
+                    <button type="submit">Add One</button>
+                </form>
+                <form method="post" action="{% url 'remove_from_budget' cart_material.material.id %}">
+                    {% csrf_token %}
+                    <button type="submit">Remove One</button>
+                </form>
+            </li>
+        {% endfor %}
+        </ul>
+        <p>Total: ${{ total }}</p>
+</div>
+
+{% endblock %}

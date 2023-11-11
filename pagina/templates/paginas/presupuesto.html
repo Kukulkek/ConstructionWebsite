@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block titulo %} ¡Seleccione los materiales para su presupuesto! {% endblock %}
+
+{% block contenido %} 
+
+<div class="container mt-5">
+    <div class="card-body">
+        <h4 class="card-title">Lista de Materiales</h4>
+
+        <div class="container">
+          <div class="row justify-content-center">
+        {% for material in material %}
+
+        <div class="card" style="width: 18rem;">
+            {% if material.imagen %}
+            <img class="card-img-top" src="{{ material.imagen.url }}"> 
+            {% endif %}
+            <div class="card-body">
+              <h5 class="card-title">{{ material.nombre }}</h5>
+              <p class="card-text">${{ material.precio }}</p>
+              <form action="{% url 'add_to_budget' material.id %}" method="post">
+                {% csrf_token %}
+                <button class="btn btn-primary" type="submit">Add to Budget</button>
+            </form>
+            
+            </div>
+          </div>
+
+        {% endfor %}
+
+      </div>
+    </div>
+    
+  </div>
+</div>
+
+{% endblock %}

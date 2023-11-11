@@ -133,4 +133,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Login and Logout Redirects
 
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+
 LOGOUT_REDIRECT_URL = 'inicio'

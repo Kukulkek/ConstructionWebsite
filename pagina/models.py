@@ -21,3 +21,15 @@ class Material(models.Model):
     def delete(self, using=None, keep_parents=False):
         self.imagen.storage.delete(self.imagen.name)
         super().delete()
+
+class Cart(models.Model):
+    id = models.AutoField(primary_key=True)
+    session_key = models.CharField(max_length=255, unique=True)
+    materials = models.ManyToManyField(Material, through='CartMaterial')
+
+class CartMaterial(models.Model):
+    id = models.AutoField(primary_key=True)
+    material = models.ForeignKey(Material, on_delete=models.CASCADE)
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+
