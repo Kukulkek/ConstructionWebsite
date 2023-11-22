@@ -15,9 +15,23 @@ def nosotros(request):
 def servicios(request):
     return render(request, 'paginas/servicios.html')
 
+def contacto(request):
+    return render(request, 'paginas/contacto.html')
+
 def presupuesto(request):
     material = Material.objects.all()
-    return render(request, 'paginas/presupuesto.html', {'material': material})
+    session_key = request.session.session_key
+    if not session_key:
+        request.session.create()
+        session_key = request.session.session_key
+    try:
+        cart = Cart.objects.get(session_key=session_key)
+    except Cart.DoesNotExist:
+        cart = Cart.objects.create(session_key=session_key)
+
+    cart_material = CartMaterial.objects.filter(cart=cart)
+
+    return render(request, 'paginas/presupuesto.html', {'material': material, 'cart_material': cart_material})
 
 def add_to_budget(request, material_id):
     material = get_object_or_404(Material, pk=material_id)
@@ -38,15 +52,57 @@ def add_to_budget(request, material_id):
 
     return redirect('presupuesto')
 
-def factura(request):
+def remove_from_budget_presupuesto(request, material_id):
+    material = get_object_or_404(Material, pk=material_id)
     session_key = request.session.session_key
 
     cart = Cart.objects.get(session_key=session_key)
+
+    try:
+        cart_material = CartMaterial.objects.get(cart=cart, material=material)
+        if cart_material.quantity > 1:
+            cart_material.quantity -= 1
+            cart_material.save()
+        else:
+            cart_material.delete()
+    except CartMaterial.DoesNotExist:
+        pass
+
+    return redirect('presupuesto')
+
+def factura(request):
+    session_key = request.session.session_key
+    if not session_key:
+        request.session.create()
+        session_key = request.session.session_key
+    try:
+        cart = Cart.objects.get(session_key=session_key)
+    except Cart.DoesNotExist:
+        cart = Cart.objects.create(session_key=session_key)
 
     cart_material = CartMaterial.objects.filter(cart=cart)
     total = sum(item.material.precio * item.quantity for item in cart_material)
 
     return render(request, 'paginas/factura.html', {'cart_material': cart_material, 'total': total})
+
+def add_to_budget_factura(request, material_id):
+    material = get_object_or_404(Material, pk=material_id)
+    session_key = request.session.session_key
+
+    if not session_key:
+        request.session.create()
+        session_key = request.session.session_key
+
+    cart, created = Cart.objects.get_or_create(session_key=session_key)
+
+    try: 
+        cart_material = CartMaterial.objects.get(cart=cart, material=material)
+        cart_material.quantity += 1
+        cart_material.save()
+    except CartMaterial.DoesNotExist:
+        CartMaterial.objects.create(cart=cart, material=material, quantity=1)
+
+    return redirect('factura')    
 
 def remove_from_budget(request, material_id):
     material = get_object_or_404(Material, pk=material_id)
@@ -88,6 +144,9 @@ def crear(request):
 def editar(request, id):
     material = Material.objects.get(id=id)
     formulario = MaterialForm(request.POST or None, request.FILES or None, instance=material)
+    if formulario.is_valid() and request.method == 'POST':
+        formulario.save()
+        return redirect('materiales')
     return render(request, 'materiales/editar.html', {'formulario': formulario})
 @login_required
 def eliminar(request, id):

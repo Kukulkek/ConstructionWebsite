@@ -1,37 +1,63 @@
 {% extends "base.html" %}
 
-{% block titulo %} ¡Seleccione los materiales para su presupuesto! {% endblock %}
+{% block titulo %} Presupuesto {% endblock %}
 
 {% block contenido %} 
 
 <div class="container mt-5">
-    <div class="card-body">
-        <h4 class="card-title">Lista de Materiales</h4>
-
-        <div class="container">
-          <div class="row justify-content-center">
+  <div class="card-body">
+    <h4 class="card-title text-center">¡Seleccione los materiales para su presupuesto!</h4>
+    <div class="container mt-4 mb-3">
+      <div class="row">
+        <div class="col-lg-9">
+        
+      <div class="row justify-content-center">
         {% for material in material %}
-
-        <div class="card" style="width: 18rem;">
-            {% if material.imagen %}
-            <img class="card-img-top" src="{{ material.imagen.url }}"> 
-            {% endif %}
-            <div class="card-body">
-              <h5 class="card-title">{{ material.nombre }}</h5>
-              <p class="card-text">${{ material.precio }}</p>
-              <form action="{% url 'add_to_budget' material.id %}" method="post">
-                {% csrf_token %}
-                <button class="btn btn-primary" type="submit">Add to Budget</button>
-            </form>
-            
+        <div class="card m-1 text-center" style="width: 18rem;">
+          {% if material.imagen %}
+          <img class="card-img-top" src="{{ material.imagen.url }}"> 
+          {% endif %}
+          <div class="card-body">
+            <h5 class="card-title">{{ material.nombre }}</h5>
+            <p class="card-text">{{ material.get_medida_display }}</p>
+            <p class="card-text">${{ material.precio }}</p>
+            <div class="row">
+              <div class="col-sm">
+                <form action="{% url 'add_to_budget' material.id %}" method="post">
+                  {% csrf_token %}
+                  <button class="btn btn-primary" type="submit">+</button>
+                </form>
+              </div>         
+              <div class="col-sm">
+                <form action="{% url 'remove_from_budget_presupuesto' material.id %}" method="post">
+                  {% csrf_token %}
+                  <button class="btn btn-primary" type="submit">-</button>
+                </form>             
+              </div>
             </div>
           </div>
-
+        </div>
         {% endfor %}
-
       </div>
+
+        </div>
+
+      <div class="col">
+      <ol class="list-group list-group-numbered" style="width: 18rem;">
+        {% for cart_material in cart_material %}
+        <li class="list-group-item d-flex justify-content-between align-items-start">
+          <div class="ms-2 me-auto">
+            <div class="fw-bold"> {{ cart_material.material.nombre }}</div>
+            {{ cart_material.material.precio }}
+          </div>
+          <span class="badge bg-primary rounded-pill">{{ cart_material.quantity }}</span>
+        </li>
+        {% endfor %}
+        <a name="" id="" class="btn btn-info" href="{% url 'factura' %}" role="button">Siguiente</a>
+      </ol>
     </div>
-    
+
+    </div>
   </div>
 </div>
 

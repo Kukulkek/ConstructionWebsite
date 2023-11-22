@@ -8,6 +8,7 @@ class Material(models.Model):
         ('option1', 'Metro Cuadrado'),
         ('option2', 'Metro Cubico'),
         ('option3', 'Kilo'),
+        ('option4', 'Unidad'),
     ]
     medida = models.CharField(max_length=20, choices=CHOICES, verbose_name='Medida')
     precio = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Precio')

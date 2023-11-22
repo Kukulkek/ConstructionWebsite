@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block titulo %} Contacto {% endblock %}
+
+{% block contenido %}
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-body">
+            <div class="text-center">
+                <h2>¡Escribenos tus dudas!</h2>
+            </div>
+            <form action="#" method="post" id="contactForm">
+                <!-- Email Field -->
+                <div class="form-group">
+                    <label for="inputEmail">Correo electronico</label>
+                    <input type="email" class="form-control" id="inputEmail" name="email" placeholder="ejemplo@gmail.com" required>
+                </div>
+        
+                <!-- Message Field -->
+                <div class="form-group">
+                    <label for="inputMessage">Mensaje</label>
+                    <textarea class="form-control" id="inputMessage" name="message" rows="4" placeholder="Tu mensaje" required></textarea>
+                </div>
+        
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-primary">Enviar</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
